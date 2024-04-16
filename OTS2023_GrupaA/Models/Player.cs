@@ -35,6 +35,12 @@ namespace OTS2023_GrupaA.Models
                 case Move.Right:
                     MoveRight();
                     break;
+                case Move.Front:
+                    MoveFront();
+                    break;
+                case Move.Back:
+                    MoveBack();
+                    break;
                 default:
                     break;
             }
@@ -60,20 +66,35 @@ namespace OTS2023_GrupaA.Models
             Position.X++;
         }
 
+        public void MoveFront()
+        {
+            Position.Z++;
+        }
+
+        public void MoveBack()
+        {
+            Position.Z--;
+        }
+
         public Position GetPositionAfterMove(Move move)
         {
             int x = Position.X;
             int y = Position.Y;
+            int z = Position.Z;
             switch (move)
             {
                 case Move.Up:
-                    return new Position(x, y - 1);
+                    return new Position(x, y - 1, z);
                 case Move.Down:
-                        return new Position(x, y + 1);
+                        return new Position(x, y + 1, z);
                 case Move.Left:
-                    return new Position(x - 1, y);
+                    return new Position(x - 1, y, z);
                 case Move.Right:
-                    return new Position(x + 1, y);
+                    return new Position(x + 1, y, z);
+                case Move.Front:
+                    return new Position(x, y, z + 1);
+                case Move.Back:
+                    return new Position(x, y, z - 1);
                 default:
                     return null;
             }

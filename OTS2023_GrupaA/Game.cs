@@ -9,7 +9,9 @@ namespace OTS2023_GrupaA
         Up,
         Down,
         Left,
-        Right
+        Right,
+        Front,
+        Back
     }
 
     public enum Score
@@ -22,12 +24,12 @@ namespace OTS2023_GrupaA
     public class Game
     {
         public Player Player { get; set; }
-        public Map Map { get; set; }
+        public Space Map { get; set; }
 
 
         public Game(Position playerPosition, Position revealHiddenItemPosition)
         {
-            Map = new Map();
+            Map = new Space();
             Map.InitializeMap();
 
             if (!ValidatePositionInsideMap(playerPosition) || !ValidatePositionInsideMap(revealHiddenItemPosition))
@@ -37,8 +39,9 @@ namespace OTS2023_GrupaA
 
             int itemX = revealHiddenItemPosition.X;
             int itemY = revealHiddenItemPosition.Y;
+            int itemZ = revealHiddenItemPosition.Z;
 
-            Map.Tiles[itemX, itemY].Content = TileContent.RevealHiddenItem;
+            Map.Tiles[itemX, itemY, itemZ].Content = TileContent.RevealHiddenItem;
             Player = new Player(playerPosition);
         }
 
@@ -56,12 +59,13 @@ namespace OTS2023_GrupaA
         {
             int x = position.X;
             int y = position.Y;
+            int z = position.Z; 
 
             if (!ValidatePositionInsideMap(position))
             {
                 return false;
             }
-            if(Map.Tiles[x, y].Type.Equals(TileType.Hidden))
+            if(Map.Tiles[x, y, z].Type.Equals(TileType.Hidden))
             {
                 return Player.CanRevealHidden;
             }
@@ -75,12 +79,13 @@ namespace OTS2023_GrupaA
         {
             int x = position.X;
             int y = position.Y;
+            int z = position.Z;
 
-            if (x < 0 || x >= Map.MapSize || y < 0 || y >= Map.MapSize)
+            if (x < 0 || x >= Space.MapSize || y < 0 || y >= Space.MapSize || z < 0 || z >= Space.MapSize)
             {
                 return false;
             }
-            if (Map.Tiles[x, y].Type.Equals(TileType.MapBarrier))
+            if (Map.Tiles[x, y, z].Type.Equals(TileType.MapBarrier))
             {
                 return false;
             }
@@ -91,15 +96,16 @@ namespace OTS2023_GrupaA
         {
             int x = Player.Position.X;
             int y = Player.Position.Y;
+            int z = Player.Position.Z;
 
-            if (Map.Tiles[x, y].Content.Equals(TileContent.Gold))
+            if (Map.Tiles[x, y, z].Content.Equals(TileContent.Gold))
             {
-                if (Map.Tiles[x, y].Type.Equals(TileType.Hidden))
+                if (Map.Tiles[x, y, z].Type.Equals(TileType.Hidden))
                     Player.AmountOfHiddenGold++;
                 else
                     Player.AmountOfGold++;
             }
-            else if(Map.Tiles[x, y].Content.Equals(TileContent.RevealHiddenItem))
+            else if(Map.Tiles[x, y, z].Content.Equals(TileContent.RevealHiddenItem))
             {
                 Player.CanRevealHidden = true;
             }
